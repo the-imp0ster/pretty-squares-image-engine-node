@@ -42,6 +42,7 @@ async function imageEngine(traitDirectory, numImages) {
       bottom_right_image.resize(layerSize, layerSize);
       bottom_left_image.resize(layerSize, layerSize);
 
+      // ‧͙⁺˚*･༓☾  Create a new square Jimp canvas with a transparent background.
       const combined_image = new Jimp(layerSize, layerSize, 0x00000000);
       combined_image.composite(top_left_image, 0, 0);
       combined_image.composite(top_right_image, 0, 0);
@@ -77,12 +78,12 @@ async function imageEngine(traitDirectory, numImages) {
   }
 }
 
-// Helper function to choose a random element from an array
+// ‧͙⁺˚*･༓☾  Helper function to choose a random trait.
 function randomChoice(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-// ‧͙⁺˚*･༓☾  Provide the trait directory and number of images desired here, then call the image engine function.
+// ‧͙⁺˚*･༓☾  Provide the trait directory and number of images desired here, then run the image engine.
 if (require.main === module) {
   const traitDirectory = 'traits';
   const numImages = 10;
