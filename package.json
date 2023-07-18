@@ -1,0 +1,17 @@
+{
+  "name": "pretty-squares-image-engine-node",
+  "description": "A Node.js image generation engine for creating simple beautiful square images using random layers.",
+  "author": "Imp0ster",
+  "repo-homepage": "https://github.com/the-imp0ster/pretty-squares-image-engine-node",
+  "keywords": [
+    "image generation",
+    "jimp",
+    "nodejs",
+    "art",
+    "nfts"
+  ],
+  "dependencies": {
+    "jimp": "^0.22.8"
+  }
+}
+
