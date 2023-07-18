@@ -8,34 +8,34 @@ const Jimp = require('jimp');
 // ‧͙⁺˚*･༓☾  Rouse the image engine from its slumber.
 async function imageEngine(traitDirectory, numImages) {
   // ‧͙⁺˚*･༓☾  Create/find a directory called Finished in the project folder to save the generated images to.
-  const finishedDirectory = 'finished';
+  let finishedDirectory = 'finished';
   if (!fs.existsSync(finishedDirectory)) {
     fs.mkdirSync(finishedDirectory);
   }
 
   // ‧͙⁺˚*･༓☾  Get the layers in each trait folder.
-  const topLeftLayers = await fs.promises.readdir(path.join(traitDirectory, 'TopLeft'));
-  const topRightLayers = await fs.promises.readdir(path.join(traitDirectory, 'TopRight'));
-  const bottomRightLayers = await fs.promises.readdir(path.join(traitDirectory, 'BottomRight'));
-  const bottomLeftLayers = await fs.promises.readdir(path.join(traitDirectory, 'BottomLeft'));
+  let topLeftLayers = await fs.promises.readdir(path.join(traitDirectory, 'TopLeft'));
+  let topRightLayers = await fs.promises.readdir(path.join(traitDirectory, 'TopRight'));
+  let bottomRightLayers = await fs.promises.readdir(path.join(traitDirectory, 'BottomRight'));
+  let bottomLeftLayers = await fs.promises.readdir(path.join(traitDirectory, 'BottomLeft'));
 
   // ‧͙⁺˚*･༓☾  Make a list of previously used combinations (so it doesn't make duplicates).
-  const usedCombos = [];
+  let usedCombos = [];
 
   for (let i = 1; i <= numImages; i++) {
     while (true) {
       // ‧͙⁺˚*･༓☾  Select a random layer from each subdirectory.
-      const top_left_layer = randomChoice(topLeftLayers);
-      const top_right_layer = randomChoice(topRightLayers);
-      const bottom_right_layer = randomChoice(bottomRightLayers);
-      const bottom_left_layer = randomChoice(bottomLeftLayers);
+      let top_left_layer = randomChoice(topLeftLayers);
+      let top_right_layer = randomChoice(topRightLayers);
+      let bottom_right_layer = randomChoice(bottomRightLayers);
+      let bottom_left_layer = randomChoice(bottomLeftLayers);
 
       // ‧͙⁺˚*･༓☾  Combine the four selected layers into one image by stacking them.
-      const layerSize = 200;
-      const top_left_image = await Jimp.read(path.join(traitDirectory, 'TopLeft', top_left_layer));
-      const top_right_image = await Jimp.read(path.join(traitDirectory, 'TopRight', top_right_layer));
-      const bottom_right_image = await Jimp.read(path.join(traitDirectory, 'BottomRight', bottom_right_layer));
-      const bottom_left_image = await Jimp.read(path.join(traitDirectory, 'BottomLeft', bottom_left_layer));
+      let layerSize = 200;
+      let top_left_image = await Jimp.read(path.join(traitDirectory, 'TopLeft', top_left_layer));
+      let top_right_image = await Jimp.read(path.join(traitDirectory, 'TopRight', top_right_layer));
+      let bottom_right_image = await Jimp.read(path.join(traitDirectory, 'BottomRight', bottom_right_layer));
+      let bottom_left_image = await Jimp.read(path.join(traitDirectory, 'BottomLeft', bottom_left_layer));
 
       top_left_image.resize(layerSize, layerSize);
       top_right_image.resize(layerSize, layerSize);
@@ -43,20 +43,20 @@ async function imageEngine(traitDirectory, numImages) {
       bottom_left_image.resize(layerSize, layerSize);
 
       // ‧͙⁺˚*･༓☾  Create a new square Jimp canvas with a transparent background.
-      const combined_image = new Jimp(layerSize, layerSize, 0x00000000);
+      let combined_image = new Jimp(layerSize, layerSize, 0x00000000);
       combined_image.composite(top_left_image, 0, 0);
       combined_image.composite(top_right_image, 0, 0);
       combined_image.composite(bottom_right_image, 0, 0);
       combined_image.composite(bottom_left_image, 0, 0);
 
       // ‧͙⁺˚*･༓☾  Before saving the image, check if this combination has already been used.
-      const combo = [top_left_layer, top_right_layer, bottom_right_layer, bottom_left_layer].join(',');
+      let combo = [top_left_layer, top_right_layer, bottom_right_layer, bottom_left_layer].join(',');
       if (!usedCombos.includes(combo)) {
-        const imageFilename = path.join(finishedDirectory, `${i}.png`);
+        let imageFilename = path.join(finishedDirectory, `${i}.png`);
         await combined_image.writeAsync(imageFilename);
 
         // ‧͙⁺˚*･༓☾  Create a JSON metadata object for the pretty square.
-        const metadata = {
+        let metadata = {
           name: `Pretty Square #${i}`,
           traits: {
             TopLeft: top_left_layer,
@@ -67,7 +67,7 @@ async function imageEngine(traitDirectory, numImages) {
         };
 
         // ‧͙⁺˚*･༓☾  Save the JSON metadata to a file (1 file for each generated image).
-        const metadataFilename = path.join(finishedDirectory, `${i}_metadata.json`);
+        let metadataFilename = path.join(finishedDirectory, `${i}_metadata.json`);
         fs.writeFileSync(metadataFilename, JSON.stringify(metadata));
 
         // ‧͙⁺˚*･༓☾  Add the combination to the used combinations list.
@@ -78,14 +78,14 @@ async function imageEngine(traitDirectory, numImages) {
   }
 }
 
-// ‧͙⁺˚*･༓☾  Helper function to choose a random trait.
+// ‧͙⁺˚*･༓☾  Helper function to choose a random element from an array
 function randomChoice(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-// ‧͙⁺˚*･༓☾  Provide the trait directory and number of images desired here, then run the image engine.
+// ‧͙⁺˚*･༓☾  Provide the trait directory and number of images desired here, then call the image engine function.
 if (require.main === module) {
-  const traitDirectory = 'traits';
-  const numImages = 10;
+  let traitDirectory = 'traits';
+  let numImages = 10;
   imageEngine(traitDirectory, numImages).catch((err) => console.error(err));
 }
